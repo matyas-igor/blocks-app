@@ -12,7 +12,9 @@
   "plugins": ["prettier"],
   "rules": {
     "prettier/prettier": 1,
+    "jsx-a11y/anchor-is-valid": 0,
     "react/prop-types": 0,
+    "react/display-name": 0,
     "@typescript-eslint/no-explicit-any": 0,
     "@typescript-eslint/no-use-before-define": 0
   }
