@@ -1,4 +1,4 @@
-# 🤖 Simple React + Apollo's GraphQL Client for displaying blocks from Bitcoin's blockchain
+# 🤖 Bitcoin's blocks explorer
 
 An example application for displaying Bitcoin's blockchain blocks
 
