@@ -4,6 +4,9 @@ import { Typography } from 'antd'
 export const AlertWrapper = styled.div`
   margin-bottom: 24px;
 `
+export const TableWrapper = styled.div`
+  margin-bottom: 24px;
+`
 export const FormWrapper = styled.div`
   display: flex;
   flex-direction: row;

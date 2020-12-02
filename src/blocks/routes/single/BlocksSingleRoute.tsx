@@ -4,7 +4,7 @@ import { Helmet } from 'react-helmet'
 import { gql, useQuery } from '@apollo/client'
 import { MainLayout } from '../../../common/components/Layout'
 import { AlertWrapper, PageTitle } from '../../../common/components/Page'
-import { Alert } from 'antd'
+import { Alert , Typography} from 'antd'
 
 const GET_BLOCK = gql`
   query GetBlock($hash: Hash!) {
@@ -53,6 +53,7 @@ export const BlocksSingleRoute: React.FC = () => {
           <Alert message="Error while fetching blocks!" description={error.message} type="error" />
         </AlertWrapper>
       )}
+      <Typography.Title level={2}>Transactions</Typography.Title>
     </MainLayout>
   )
 }

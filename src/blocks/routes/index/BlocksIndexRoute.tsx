@@ -62,8 +62,8 @@ export const BlocksIndexRoute: React.FC = () => {
     },
   })
 
-  const [latestBlocks, setLatestBlocks] = useState([])
-  const [latestTotal, setLatestTotal] = useState(0)
+  const [latestBlocks, setLatestBlocks] = useState(data?.blocks?.blocks || [])
+  const [latestTotal, setLatestTotal] = useState(data?.blocks?.total || 0)
 
   useUpdateEffect(() => {
     if (data?.blocks?.total) {
