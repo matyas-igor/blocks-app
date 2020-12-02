@@ -3,14 +3,14 @@ export const formatValue = (number: number | BigInt, currency: string = 'BTC'): 
     return ''
   }
   const bigNumber = BigInt(number)
-  const floatPart = bigNumber % 10n ** 8n
+  const floatPart = bigNumber % 100000000n
   const integerPart = bigNumber - floatPart
-  return `${(integerPart / 10n ** 8n).toLocaleString()}.${floatPart.toString().padStart(8, '0')}${
+  return `${(integerPart / 100000000n).toLocaleString()}.${floatPart.toString().padStart(8, '0')}${
     currency ? ` ${currency}` : ''
   }`
 }
 
-const INITIAL_REWARD = 50n * 10n ** 8n
+const INITIAL_REWARD = 50n * 100000000n
 const HALVINGS_INTERVAL = 210000n
 
 export const getBlockReward = (blockHeight: number, currency: string = 'BTC'): string => {
