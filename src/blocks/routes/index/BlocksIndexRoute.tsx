@@ -1,67 +1,89 @@
 import React, { useState } from 'react'
-import moment, { Moment } from 'moment'
+import { Moment } from 'moment'
 import { gql, useQuery } from '@apollo/client'
-import { DatePicker, Table } from 'antd'
+import { useUpdateEffect } from 'react-use'
+import { Alert } from 'antd'
+import { TablePaginationConfig } from 'antd/es/table'
 import { MainLayout } from '../../../common/components/Layout'
 import { maxDate } from '../../../common/helpers/date'
-import { StyledAlert } from './BlocksIndexRoute.styled'
-import { useUpdateEffect } from 'react-use'
+import { AlertWrapper, PageTitle } from '../../../common/components/Page'
+import { BlocksIndexForm } from './components/BlocksIndexForm'
+import { BlocksIndexList } from './components/BlocksIndexList'
 
-const { Column } = Table
+const PAGE_SIZE = 20
 
 const GET_BLOCKS = gql`
-  query GetBlocks($date: Day!) {
-    blocks(date: $date) {
-      height
-      hash
-      time
+  query GetBlocks($date: Day!, $offset: Int!, $limit: Int!) {
+    blocks(date: $date, offset: $offset, limit: $limit) {
+      total
+      blocks {
+        height
+        hash
+        time
+      }
     }
   }
 `
 
-const disabledDate = (date: Moment) => {
-  return date && moment(date).isAfter(maxDate)
-}
-
 export const BlocksIndexRoute: React.FC = () => {
-  const [internalDate, setDate] = useState(maxDate)
-  const date = internalDate && internalDate.isSameOrBefore(maxDate) ? internalDate : maxDate
+  const [filter, setFilter] = useState({
+    page: 1,
+    pageSize: PAGE_SIZE,
+    date: maxDate,
+  })
+
+  const date = filter.date && filter.date.isSameOrBefore(maxDate) ? filter.date : maxDate
 
   const { loading, error, data } = useQuery(GET_BLOCKS, {
-    variables: { date: date.format('YYYY-MM-DD') },
+    variables: { date: date.format('YYYY-MM-DD'), offset: (filter.page - 1) * filter.pageSize, limit: filter.pageSize },
   })
 
   const [latestBlocks, setLatestBlocks] = useState([])
+  const [latestTotal, setLatestTotal] = useState(0)
 
   useUpdateEffect(() => {
-    if (data?.blocks) {
-      setLatestBlocks(data.blocks)
+    if (data?.blocks?.total) {
+      setLatestBlocks(data.blocks.blocks)
+      setLatestTotal(data.blocks.total)
     }
   }, [data, loading, error])
 
+  const handleTableChange = ({ current, pageSize }: TablePaginationConfig) => {
+    setFilter((state) => ({ ...state, page: current || 1, pageSize: pageSize || PAGE_SIZE }))
+  }
+  const handleDateChange = (date: Moment | null) => {
+    setFilter((state) => ({ ...state, page: 1, date: date || maxDate }))
+  }
+  const handlePageChange = (page: number) => {
+    setFilter((state) => ({ ...state, page }))
+  }
+
   return (
     <MainLayout>
-      {error && <StyledAlert message="Error while fetching blocks!" description={error.message} type="error" />}
-      <DatePicker
-        size={'large'}
-        disabledDate={disabledDate}
-        allowClear={false}
-        showToday={false}
-        value={date}
-        onChange={(value) => setDate(moment(value))}
+      <PageTitle>Blocks</PageTitle>
+      {error && (
+        <AlertWrapper>
+          <Alert message="Error while fetching blocks!" description={error.message} type="error" />
+        </AlertWrapper>
+      )}
+      <BlocksIndexForm
+        date={date}
+        page={filter.page}
+        pageSize={filter.pageSize}
+        loading={loading}
+        onDateChange={handleDateChange}
+        onPageChange={handlePageChange}
+        total={data?.blocks?.total}
+        latestTotal={latestTotal}
       />
-      <Table dataSource={latestBlocks} loading={loading}>
-        <Column title="Height" dataIndex="height" key="height" render={(text) => <a>{text}</a>} />
-        <Column title="Hash" dataIndex="hash" key="hash" render={(text) => <a>{text}</a>} />
-        <Column
-          title="Mined"
-          dataIndex="time"
-          key="time"
-          render={(value) => moment(value * 1000).format('YYYY-MM-DD HH:ss')}
-        />
-        <Column title="" key="action" render={(text, record) => <a>Delete</a>} />
-      </Table>
-      ,
+      <BlocksIndexList
+        page={filter.page}
+        pageSize={filter.pageSize}
+        loading={loading}
+        latestTotal={latestTotal}
+        latestBlocks={latestBlocks}
+        onTableChange={handleTableChange}
+      />
     </MainLayout>
   )
 }
