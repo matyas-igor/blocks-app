@@ -6,6 +6,8 @@ An example application for displaying Bitcoin's blocks from blockchain
 - Utilizes [Blockchain GraphQL backed API service](https://github.com/matyas-igor/blocks-api)
 - Bootsrapped with `create-react-app` and `typescript`
 
+Live demo: https://blocks-app.netlify.app/
+
 ---
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
