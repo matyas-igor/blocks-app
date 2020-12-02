@@ -1,9 +1,9 @@
-# 🤖 Bitcoin's blocks explorer
+# 🤖 Bitcoin's Blocks Explorer – React Web
 
 An example application for displaying Bitcoin's blocks from blockchain
 
-- Uses [`react`](https://reactjs.org/) together with [`styled-components`](https://styled-components.com/)
-- Uses [Blockchain GraphQL backed API service](https://github.com/matyas-igor/blocks-api)
+- Uses [`react`](https://reactjs.org/) together with [`styled-components`](https://styled-components.com/) and [`Ant Design`](https://ant.design/) components
+- Utilizes [Blockchain GraphQL backed API service](https://github.com/matyas-igor/blocks-api)
 - Bootsrapped with `create-react-app` and `typescript`
 
 ---
