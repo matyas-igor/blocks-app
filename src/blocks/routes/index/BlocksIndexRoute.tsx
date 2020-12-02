@@ -1,16 +1,19 @@
 import React, { useState } from 'react'
+import { useHistory, useLocation } from 'react-router-dom'
 import { Helmet } from 'react-helmet'
+import queryString from 'query-string'
 import { Moment } from 'moment'
 import { gql, useQuery } from '@apollo/client'
 import { useUpdateEffect } from 'react-use'
 import { Alert } from 'antd'
 import { TablePaginationConfig } from 'antd/es/table'
 import { MainLayout } from '../../../common/components/Layout'
-import { maxDate } from '../../../common/helpers/date'
+import { formatDate, maxDate, parseDate } from '../../../common/helpers/date'
 import { AlertWrapper, PageTitle } from '../../../common/components/Page'
 import { BlocksIndexForm } from './components/BlocksIndexForm'
 import { BlocksIndexList } from './components/BlocksIndexList'
 
+const PAGE_MIN_SIZE = 10
 const PAGE_SIZE = 20
 
 const GET_BLOCKS = gql`
@@ -26,17 +29,37 @@ const GET_BLOCKS = gql`
   }
 `
 
-export const BlocksIndexRoute: React.FC = () => {
-  const [filter, setFilter] = useState({
-    page: 1,
-    pageSize: PAGE_SIZE,
-    date: maxDate,
-  })
+type Filter = { page: number; pageSize: number; date: Moment }
 
-  const date = filter.date && filter.date.isSameOrBefore(maxDate) ? filter.date : maxDate
+const parseSearch = (search: string): Filter => {
+  const { page, pageSize, date } = queryString.parse(search)
+  const momentDate = date && typeof date === 'string' ? parseDate(date) : maxDate
+  return {
+    page: Math.max(parseInt((page || '').toString(), 10) || 1, 1),
+    pageSize: Math.max(parseInt((pageSize || '').toString(), 10) || PAGE_SIZE, PAGE_MIN_SIZE),
+    date: momentDate.isValid() && momentDate.isSameOrBefore(maxDate) ? momentDate : maxDate,
+  }
+}
+
+const formatSearch = ({ page, pageSize, date }: Filter): string => {
+  return queryString.stringify({
+    page,
+    pageSize,
+    date: formatDate(date),
+  })
+}
+
+export const BlocksIndexRoute: React.FC = () => {
+  const history = useHistory()
+  const { search } = useLocation()
+  const [filter, setFilter] = useState(parseSearch(search))
 
   const { loading, error, data } = useQuery(GET_BLOCKS, {
-    variables: { date: date.format('YYYY-MM-DD'), offset: (filter.page - 1) * filter.pageSize, limit: filter.pageSize },
+    variables: {
+      date: filter.date.format('YYYY-MM-DD'),
+      offset: (filter.page - 1) * filter.pageSize,
+      limit: filter.pageSize,
+    },
   })
 
   const [latestBlocks, setLatestBlocks] = useState([])
@@ -49,14 +72,24 @@ export const BlocksIndexRoute: React.FC = () => {
     }
   }, [data, loading, error])
 
+  useUpdateEffect(() => {
+    setFilter(parseSearch(search))
+  }, [search])
+
   const handleTableChange = ({ current, pageSize }: TablePaginationConfig) => {
-    setFilter((state) => ({ ...state, page: current || 1, pageSize: pageSize || PAGE_SIZE }))
+    history.push({
+      search: formatSearch({ ...filter, page: current || 1, pageSize: pageSize || PAGE_SIZE }),
+    })
   }
   const handleDateChange = (date: Moment | null) => {
-    setFilter((state) => ({ ...state, page: 1, date: date || maxDate }))
+    history.push({
+      search: formatSearch({ ...filter, page: 1, date: date || maxDate }),
+    })
   }
   const handlePageChange = (page: number) => {
-    setFilter((state) => ({ ...state, page }))
+    history.push({
+      search: formatSearch({ ...filter, page }),
+    })
   }
 
   return (
@@ -71,7 +104,7 @@ export const BlocksIndexRoute: React.FC = () => {
         </AlertWrapper>
       )}
       <BlocksIndexForm
-        date={date}
+        date={filter.date}
         page={filter.page}
         pageSize={filter.pageSize}
         loading={loading}
