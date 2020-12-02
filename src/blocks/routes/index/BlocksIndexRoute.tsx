@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { Helmet } from 'react-helmet'
 import { Moment } from 'moment'
 import { gql, useQuery } from '@apollo/client'
 import { useUpdateEffect } from 'react-use'
@@ -59,7 +60,10 @@ export const BlocksIndexRoute: React.FC = () => {
   }
 
   return (
-    <MainLayout>
+    <MainLayout breadcrumbs={[{ to: '/blocks', name: 'Explorer', active: true }]}>
+      <Helmet>
+        <title>Blockchain Explorer</title>
+      </Helmet>
       <PageTitle>Blocks</PageTitle>
       {error && (
         <AlertWrapper>

@@ -1,0 +1,53 @@
+# This file was generated based on ".graphqlconfig". Do not edit manually.
+
+schema {
+    query: Query
+}
+
+type Block {
+    bits: Int
+    block_index: Int
+    hash: Hash
+    height: Int
+    main_chain: Boolean
+    mrkl_root: String
+    n_tx: Int
+    nonce: Int
+    prev_block: String
+    received_time: Int
+    relayed_by: String
+    size: Int
+    time: Int
+    ver: Int
+}
+
+type BlockDescription {
+    hash: Hash
+    height: Int
+    time: Int
+}
+
+type BlocksConnection {
+    blocks: [BlockDescription]!
+    total: Int!
+}
+
+type Query {
+    block(hash: Hash!): Block
+    blocks(date: Day!, limit: Int, offset: Int): BlocksConnection!
+}
+
+enum CacheControlScope {
+    PRIVATE
+    PUBLIC
+}
+
+
+"Day scalar type in YYYY-MM-DD format"
+scalar Day
+
+"Hash scalar type"
+scalar Hash
+
+"The `Upload` scalar type represents a file upload."
+scalar Upload

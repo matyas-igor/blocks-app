@@ -1,5 +1,6 @@
 import * as React from 'react'
 import moment from 'moment'
+import { Link } from 'react-router-dom'
 import { Table } from 'antd'
 import { LinkMono } from '../../../../common/components/Page/Page.styled'
 import { TablePaginationConfig } from 'antd/es/table'
@@ -27,8 +28,23 @@ export const BlocksIndexList: React.FC<Props> = ({
     loading={loading}
     onChange={onTableChange}
   >
-    <Table.Column title="Height" dataIndex="height" key="height" render={(text) => <a>{text}</a>} width={100} />
-    <Table.Column title="Hash" dataIndex="hash" key="hash" render={(text) => <LinkMono>{text}</LinkMono>} />
+    <Table.Column
+      title="Height"
+      dataIndex="height"
+      key="height"
+      render={(text, record: any) => <Link to={`/blocks/${record.hash}`}>{text}</Link>}
+      width={100}
+    />
+    <Table.Column
+      title="Hash"
+      dataIndex="hash"
+      key="hash"
+      render={(text, record: any) => (
+        <Link component={LinkMono} to={`/blocks/${record.hash}`}>
+          {text}
+        </Link>
+      )}
+    />
     <Table.Column
       title="Mined"
       dataIndex="time"
@@ -36,6 +52,11 @@ export const BlocksIndexList: React.FC<Props> = ({
       render={(value) => moment(value * 1000).format('YYYY-MM-DD HH:ss')}
       width={180}
     />
-    <Table.Column title="" key="action" render={(text, record) => <a>Explore block</a>} width={132} />
+    <Table.Column
+      title=""
+      key="action"
+      render={(text, record: any) => <Link to={`/blocks/${record.hash}`}>Explore block</Link>}
+      width={132}
+    />
   </Table>
 )

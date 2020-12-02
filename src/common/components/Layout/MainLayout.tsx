@@ -1,4 +1,5 @@
-import * as React from 'react'
+import React from 'react'
+import { Link } from 'react-router-dom'
 import { Breadcrumb, Layout } from 'antd'
 import {
   ContentWrapper,
@@ -12,14 +13,14 @@ import {
 } from './MainLayoutStyled'
 
 type Props = {
-  breadcrumbs?: {
+  breadcrumbs: {
     to: string
     name: string
     active?: boolean
   }[]
 }
 
-export const MainLayout: React.FC<Props> = ({ children }) => (
+export const MainLayout: React.FC<Props> = ({ breadcrumbs, children }) => (
   <LayoutWrapper>
     <StyledHeader>
       <LogoWrapper>
@@ -29,8 +30,9 @@ export const MainLayout: React.FC<Props> = ({ children }) => (
     <Layout>
       <ContentWrapper>
         <StyledBreadcrumb>
-          <Breadcrumb.Item>Explorer</Breadcrumb.Item>
-          <Breadcrumb.Item>Block</Breadcrumb.Item>
+          {breadcrumbs.map(({ to, name, active }, index) => (
+            <Breadcrumb.Item key={index}>{active ? name : <Link to={to}>{name}</Link>}</Breadcrumb.Item>
+          ))}
         </StyledBreadcrumb>
         <StyledContent>{children}</StyledContent>
         <StyledFooter>© 2020 Igor Matias</StyledFooter>
