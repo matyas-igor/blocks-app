@@ -5,7 +5,7 @@ import { Descriptions, Table, Typography } from 'antd'
 import { TablePaginationConfig } from 'antd/es/table'
 import { FORMAT_LONG } from '../../../../common/helpers/date'
 import { formatValue } from '../../../../common/helpers/format'
-import { DescriptionsBlock, LinkMono, TextMono } from '../../../../common/components/Page'
+import { DescriptionsBlock, LinkMono } from '../../../../common/components/Page'
 
 const LABEL_TINY_STYLE = { width: 60 }
 const LABEL_SMALL_STYLE = { width: 80 }
