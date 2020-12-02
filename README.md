@@ -10,6 +10,11 @@ An example application for displaying Bitcoin's blocks from blockchain
 
 Live demo: https://blocks-app.netlify.app/
 
+![Screen Shot 2020-12-03 at 00 44 38](https://user-images.githubusercontent.com/3536796/100935724-c19cb480-34f0-11eb-8ded-f60ff6a6836d.png)
+
+![Screen Shot 2020-12-03 at 00 47 28](https://user-images.githubusercontent.com/3536796/100935738-c497a500-34f0-11eb-8af8-2fda3039bf04.png)
+
+
 ---
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
