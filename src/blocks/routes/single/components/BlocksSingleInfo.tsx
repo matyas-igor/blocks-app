@@ -1,7 +1,8 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 import moment from 'moment'
 import { Descriptions, Spin } from 'antd'
-import { DescriptionsWrapper, SpinnerContainer, TextMono } from '../../../../common/components/Page'
+import { DescriptionsWrapper, LinkMono, SpinnerContainer, TextMono } from '../../../../common/components/Page'
 import { ApolloError } from '@apollo/client'
 import { FORMAT_LONG } from '../../../../common/helpers/date'
 import { formatValue, getBlockReward } from '../../../../common/helpers/format'
@@ -21,10 +22,14 @@ export const BlocksSingleInfo: React.FC<Props> = ({ block, loading, error }) => 
         <DescriptionsWrapper>
           <Descriptions bordered size={'small'} column={1}>
             <Descriptions.Item labelStyle={LABEL_STYLE} label="Hash">
-              <TextMono>{block.hash}</TextMono>
+              <Link component={LinkMono} to={`/blocks/${block.hash}`}>
+                {block.hash}
+              </Link>
             </Descriptions.Item>
             <Descriptions.Item labelStyle={LABEL_STYLE} label="Previous hash">
-              <TextMono>{block.prev_block}</TextMono>
+              <Link component={LinkMono} to={`/blocks/${block.prev_block}`}>
+                {block.prev_block}
+              </Link>
             </Descriptions.Item>
             <Descriptions.Item labelStyle={LABEL_STYLE} label="Merkle root">
               <TextMono>{block.mrkl_root}</TextMono>
