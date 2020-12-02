@@ -10,7 +10,7 @@ import {
   StyledContent,
   StyledFooter,
   StyledHeader,
-} from './MainLayoutStyled'
+} from './MainLayout.styled'
 
 type Props = {
   breadcrumbs: {

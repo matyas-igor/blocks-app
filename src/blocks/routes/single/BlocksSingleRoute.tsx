@@ -4,25 +4,26 @@ import { Helmet } from 'react-helmet'
 import { gql, useQuery } from '@apollo/client'
 import { MainLayout } from '../../../common/components/Layout'
 import { PageTitle } from '../../../common/components/Page'
-import { Typography } from 'antd'
 import { NetworkAlert } from '../../../common/components/Alert'
+import { BlocksSingleInfo } from './components/BlocksSingleInfo'
+import { BlocksSingleTransactions } from './components/BlocksSingleTransactions'
 
 const GET_BLOCK = gql`
   query GetBlock($hash: Hash!) {
     block(hash: $hash) {
       hash
       ver
+      fee
       prev_block
       mrkl_root
       time
       bits
       block_index
       height
+      weight
       main_chain
       n_tx
       nonce
-      received_time
-      relayed_by
       size
     }
   }
@@ -33,8 +34,6 @@ export const BlocksSingleRoute: React.FC = () => {
   const { loading, error, data, refetch } = useQuery(GET_BLOCK, {
     variables: { hash },
   })
-
-  console.log('DATA', loading, error, data)
 
   const title = `Block${data?.block?.height ? `: ${data.block.height}` : ''}`
 
@@ -50,7 +49,8 @@ export const BlocksSingleRoute: React.FC = () => {
       </Helmet>
       <PageTitle>{title}</PageTitle>
       <NetworkAlert error={error} refetch={refetch} loading={loading} />
-      <Typography.Title level={2}>Transactions</Typography.Title>
+      <BlocksSingleInfo loading={loading} error={error} block={data?.block} />
+      <BlocksSingleTransactions hash={hash} />
     </MainLayout>
   )
 }

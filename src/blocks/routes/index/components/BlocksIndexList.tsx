@@ -2,8 +2,9 @@ import * as React from 'react'
 import moment from 'moment'
 import { Link } from 'react-router-dom'
 import { Table } from 'antd'
-import { LinkMono } from '../../../../common/components/Page/Page.styled'
+import { LinkMono } from '../../../../common/components/Page'
 import { TablePaginationConfig } from 'antd/es/table'
+import { FORMAT_LONG } from '../../../../common/helpers/date'
 
 type Props = {
   page: number
@@ -49,7 +50,7 @@ export const BlocksIndexList: React.FC<Props> = ({
       title="Mined"
       dataIndex="time"
       key="time"
-      render={(value) => moment(value * 1000).format('YYYY-MM-DD HH:ss')}
+      render={(value) => moment(value * 1000).format(FORMAT_LONG)}
       width={180}
     />
     <Table.Column

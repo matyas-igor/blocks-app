@@ -9,16 +9,7 @@ export const LayoutWrapper = styled(Layout)`
 export const ContentWrapper = styled(Layout)`
   margin: 0 auto;
   padding: 0 24px;
-  width: 100%;
-  @media (min-width: 768px) {
-    width: 768px;
-  }
-  @media (min-width: 992px) {
-    width: 992px;
-  }
-  @media (min-width: 1440px) {
-    width: 1440px;
-  }
+  width: 1440px;
 `
 
 export const LogoWrapper = styled.div`
@@ -34,6 +25,7 @@ export const StyledContent = styled(Layout.Content)`
   padding: 24px;
   min-width: 800px;
   min-height: 280px;
+  border-radius: 4px;
 `
 
 export const StyledHeader = styled(Layout.Header)`
