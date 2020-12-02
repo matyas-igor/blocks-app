@@ -3,8 +3,9 @@ import { useParams } from 'react-router-dom'
 import { Helmet } from 'react-helmet'
 import { gql, useQuery } from '@apollo/client'
 import { MainLayout } from '../../../common/components/Layout'
-import { AlertWrapper, PageTitle } from '../../../common/components/Page'
-import { Alert , Typography} from 'antd'
+import { PageTitle } from '../../../common/components/Page'
+import { Typography } from 'antd'
+import { NetworkAlert } from '../../../common/components/Alert'
 
 const GET_BLOCK = gql`
   query GetBlock($hash: Hash!) {
@@ -29,7 +30,7 @@ const GET_BLOCK = gql`
 
 export const BlocksSingleRoute: React.FC = () => {
   const { hash } = useParams<{ hash: string }>()
-  const { loading, error, data } = useQuery(GET_BLOCK, {
+  const { loading, error, data, refetch } = useQuery(GET_BLOCK, {
     variables: { hash },
   })
 
@@ -48,11 +49,7 @@ export const BlocksSingleRoute: React.FC = () => {
         <title>{title} | Blockchain Explorer</title>
       </Helmet>
       <PageTitle>{title}</PageTitle>
-      {error && (
-        <AlertWrapper>
-          <Alert message="Error while fetching blocks!" description={error.message} type="error" />
-        </AlertWrapper>
-      )}
+      <NetworkAlert error={error} refetch={refetch} loading={loading} />
       <Typography.Title level={2}>Transactions</Typography.Title>
     </MainLayout>
   )

@@ -5,13 +5,13 @@ import queryString from 'query-string'
 import { Moment } from 'moment'
 import { gql, useQuery } from '@apollo/client'
 import { useUpdateEffect } from 'react-use'
-import { Alert } from 'antd'
 import { TablePaginationConfig } from 'antd/es/table'
 import { MainLayout } from '../../../common/components/Layout'
 import { formatDate, maxDate, parseDate } from '../../../common/helpers/date'
-import { AlertWrapper, PageTitle } from '../../../common/components/Page'
+import { PageTitle } from '../../../common/components/Page'
 import { BlocksIndexForm } from './components/BlocksIndexForm'
 import { BlocksIndexList } from './components/BlocksIndexList'
+import { NetworkAlert } from '../../../common/components/Alert'
 
 const PAGE_MIN_SIZE = 10
 const PAGE_SIZE = 20
@@ -54,7 +54,7 @@ export const BlocksIndexRoute: React.FC = () => {
   const { search } = useLocation()
   const [filter, setFilter] = useState(parseSearch(search))
 
-  const { loading, error, data } = useQuery(GET_BLOCKS, {
+  const { loading, error, data, refetch } = useQuery(GET_BLOCKS, {
     variables: {
       date: filter.date.format('YYYY-MM-DD'),
       offset: (filter.page - 1) * filter.pageSize,
@@ -98,11 +98,7 @@ export const BlocksIndexRoute: React.FC = () => {
         <title>Blockchain Explorer</title>
       </Helmet>
       <PageTitle>Blocks</PageTitle>
-      {error && (
-        <AlertWrapper>
-          <Alert message="Error while fetching blocks!" description={error.message} type="error" />
-        </AlertWrapper>
-      )}
+      <NetworkAlert error={error} refetch={refetch} loading={loading} />
       <BlocksIndexForm
         date={filter.date}
         page={filter.page}
