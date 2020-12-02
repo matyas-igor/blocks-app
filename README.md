@@ -1,4 +1,4 @@
-# 🤖 Bitcoin's Blocks Explorer – React Web
+# 🤖 Bitcoin's blocks Explorer – React Web
 
 An example application for displaying Bitcoin's blocks from blockchain
 
